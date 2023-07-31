@@ -57,23 +57,7 @@ public class Main {
 
     // check addible of Queen(x,y)
     public static boolean check_addible_of_Queen(int x, int y) {
-        // 가로 방향
-        if (map[y] >= 0) {
-            return false;
-        }
-
-        // 대각 세로 방향
-        for (int i = 0; i < msize; i++) {
-            // 세로 방향
-            if (map[i] == x) {
-                return false;
-            }
-            // 대각 방향
-            if (map[i] == x - y + i || map[i] == x + y - i) {
-                return false;
-            }
-        }
-
+        System.out.println("Please implement the \"Check_addible_of_Queen\" feature.");
         return true;
     }
 
@@ -192,58 +176,7 @@ public class Main {
     }
 
     public static void move_Queen() {
-        // 사용자 좌표 입력(제거좌표)
-        int dx, dy;
-        System.out.print("Input old queen's position (x,y): ");
-        Scanner scanner = new Scanner(System.in);
-        String temp = scanner.nextLine();
-
-        dx = Integer.parseInt(temp.split(" ")[0].trim()) - 1;
-        dy = Integer.parseInt(temp.split(" ")[1].trim()) - 1;
-
-        // 사용자 좌표 유효성 확인
-        // check_valid_of_pos
-        if (!check_valid_of_pos(dx, dy)) {
-            System.out.println("ERROR: It is not a valid position!");
-            return;
-        }
-        // 좌표에 Queen이 존재하는지 확인
-        // check_Queen(x,y)
-        if (!check_Queen(dx, dy)) {
-            System.out.println("ERROR: It is not a valid position!");
-            return;
-        }
-
-        // 사용자 좌표 입력(추가좌표)
-        // 사용자 좌표 유효성 확인
-        // check_valid_of_pos
-        // 좌표에 Queen을 둘수 있는지 확인
-        // check_addible_of_Queen
-        int ax, ay;
-        System.out.print("Input new queen's position (x,y): ");
-        temp = scanner.nextLine();
-
-        ax = Integer.parseInt(temp.split(" ")[0].trim()) - 1;
-        ay = Integer.parseInt(temp.split(" ")[1].trim()) - 1;
-
-        // 사용자 좌표 유효성 확인
-        // check_valid_of_pos
-        if (!check_valid_of_pos(ax, ay)) {
-            System.out.println("ERROR: It is not a valid position!");
-            return;
-        }
-        // 좌표에 Queen을 둘수 있는지 확인
-        // check_addible_of_Queen
-        change_map(dx, dy, false);
-        if (!check_addible_of_Queen(ax, ay)) {
-            System.out.println("ERROR: It is not a valid position!");
-            change_map(dx, dy, true);
-            return;
-        }
-        // Queen을 이동할 수 있다면,
-        // 이동하고 이동 횟수(numM) 1회 증가
-        change_map(ax, ay, true);
-        count_numM();
+        System.out.println("Please implement the \"Move\" feature.");
     }
 
     // Get Char from user
