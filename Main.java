@@ -5,23 +5,25 @@ public class Main {
     // msize=8 Map[msize][msize]
     public static final int msize = 8;
     public static int[] map = new int[msize];
-    public static int numM = 0; // ì›€ì§ì¸ íšŸìˆ˜
-    public static int numQ = 0; // í€¸ ê°œìˆ˜
+    public static int numM = 0; // ¿òÁ÷ÀÎ È½¼ö
+    public static int numQ = 0; // Äı °³¼ö
+    public static int numInit = -100;
 
     public static void main(String[] args) {
 
-        // ë§µì´ˆê¸°í™”
+        // ¸ÊÃÊ±âÈ­
         init_map();
+        init_numM();
 
-        while (numQ < msize) {
+        while (get_number_of_Queen() < msize) {
 
-            // ë§µ ì¶œë ¥
+            // ¸Ê Ãâ·Â
             print_map();
 
-            // ì‚¬ìš©ì ê¸°ëŠ¥ ì„ íƒ
+            // »ç¿ëÀÚ ±â´É ¼±ÅÃ
             char action = get_char_from_user();
 
-            // ë°˜ì‘
+            // ¹İÀÀ
             switch (action) {
                 case 'A':
                 case 'a':
@@ -49,13 +51,29 @@ public class Main {
     // initialize map
     public static void init_map() {
         for (int i = 0; i < map.length; i++) {
-            map[i] = -1;
+            map[i] = numInit;
         }
     }
 
     // check addible of Queen(x,y)
     public static boolean check_addible_of_Queen(int x, int y) {
-        System.out.println("Please implement the \"Check_addible_of_Queen\" feature.");
+        // °¡·Î ¹æÇâ
+        if (map[y] >= 0) {
+            return false;
+        }
+
+        // ´ë°¢ ¼¼·Î ¹æÇâ
+        for (int i = 0; i < msize; i++) {
+            // ¼¼·Î ¹æÇâ
+            if (map[i] == x) {
+                return false;
+            }
+            // ´ë°¢ ¹æÇâ
+            if (map[i] == x - y + i || map[i] == x + y - i) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -77,34 +95,155 @@ public class Main {
         } else {
             if (empty)
                 System.out.println(error);
-            map[y] = -1;
+            map[y] = numInit;
         }
     }
 
+    public static int get_number_of_Queen() {
+        int sum = 0;
+        for (int i : map) {
+            if (i >= 0) {
+                sum += 1;
+            }
+        }
+        return sum;
+    }
+
+    // ---------------------Function About Other function-----------
+
+    public static boolean check_valid_of_pos(int x, int y) {
+        // ¸Ê ¹üÀ§ ³»ÀÎ °æ¿ì
+        if ((x >= 0 && x < msize) && (y >= 0 && y < msize))
+            return true;
+
+        // ¸Ê ¹üÀ§ ¹ÛÀÎ °æ¿ì
+        return false;
+    }
+
     // Count Move && init Move count
+    public static void init_numM() {
+        numM = 0;
+    }
+
+    public static void count_numM() {
+        numM++;
+    }
 
     // --------------Funtion About UI--------------------
 
     // Add, Delete, Move Queen
     public static void add_Queen() {
-        System.out.println("Please implement the \"Add\" feature.");
+        int x, y;
+
+        // »ç¿ëÀÚ ÁÂÇ¥ ÀÔ·Â
+        System.out.print("Input new queen's position (x,y): ");
+        Scanner scanner = new Scanner(System.in);
+        String temp = scanner.nextLine();
+
+        x = Integer.parseInt(temp.split(" ")[0].trim()) - 1;
+        y = Integer.parseInt(temp.split(" ")[1].trim()) - 1;
+
+        // »ç¿ëÀÚ ÁÂÇ¥ À¯È¿¼º È®ÀÎ
+        // check_valid_of_pos
+        if (!check_valid_of_pos(x, y)) {
+            System.out.println("ERROR: It is not a valid position!");
+            return;
+        }
+        // ÁÂÇ¥¿¡ QueenÀ» µÑ¼ö ÀÖ´ÂÁö È®ÀÎ
+        // check_addible_of_Queen
+        if (!check_addible_of_Queen(x, y)) {
+            System.out.println("ERROR: It is not a valid position!");
+            return;
+        }
+
+        // °¡´ÉÇÏ´Ù¸é, QueenÀ» µÎ°í, Queen°³¼ö
+        // Áõ°¡(numQ) ÀÌµ¿ È½¼ö(numM) 1È¸ Áõ°¡
+        change_map(x, y, true);
+        count_numM();
     }
 
     public static void delete_Queen() {
-        System.out.println("Please implement the \"Delete\" feature.");
+        int x, y;
+
+        // »ç¿ëÀÚ ÁÂÇ¥ ÀÔ·Â
+        System.out.print("Input old queen's position (x,y): ");
+        Scanner scanner = new Scanner(System.in);
+        String temp = scanner.nextLine();
+
+        x = Integer.parseInt(temp.split(" ")[0].trim()) - 1;
+        y = Integer.parseInt(temp.split(" ")[1].trim()) - 1;
+
+        // »ç¿ëÀÚ ÁÂÇ¥ À¯È¿¼º È®ÀÎ
+        // check_valid_of_pos
+        if (!check_valid_of_pos(x, y)) {
+            System.out.println("ERROR: It is not a valid position!");
+            return;
+        }
+        // ÁÂÇ¥¿¡ QueenÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
+        // check_Queen(x,y)
+        if (!check_Queen(x, y)) {
+            System.out.println("ERROR: It is not a valid position!");
+            return;
+        }
+        // QueenÀ» Á¦°ÅÇÒ ¼ö ÀÖ´Ù¸é,
+        // Á¦°ÅÇÏ°í ÀÌµ¿ È½¼ö(numM) 1È¸ Áõ°¡
+        change_map(x, y, false);
+        count_numM();
     }
 
     public static void move_Queen() {
-        System.out.println("Please implement the \"Move\" feature.");
-    }
-
-    // User input
-    public static String get_user_input() {
+        // »ç¿ëÀÚ ÁÂÇ¥ ÀÔ·Â(Á¦°ÅÁÂÇ¥)
+        int dx, dy;
+        System.out.print("Input old queen's position (x,y): ");
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.next();
-        input = input.trim();
+        String temp = scanner.nextLine();
 
-        return input;
+        dx = Integer.parseInt(temp.split(" ")[0].trim()) - 1;
+        dy = Integer.parseInt(temp.split(" ")[1].trim()) - 1;
+
+        // »ç¿ëÀÚ ÁÂÇ¥ À¯È¿¼º È®ÀÎ
+        // check_valid_of_pos
+        if (!check_valid_of_pos(dx, dy)) {
+            System.out.println("ERROR: It is not a valid position!");
+            return;
+        }
+        // ÁÂÇ¥¿¡ QueenÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
+        // check_Queen(x,y)
+        if (!check_Queen(dx, dy)) {
+            System.out.println("ERROR: It is not a valid position!");
+            return;
+        }
+
+        // »ç¿ëÀÚ ÁÂÇ¥ ÀÔ·Â(Ãß°¡ÁÂÇ¥)
+        // »ç¿ëÀÚ ÁÂÇ¥ À¯È¿¼º È®ÀÎ
+        // check_valid_of_pos
+        // ÁÂÇ¥¿¡ QueenÀ» µÑ¼ö ÀÖ´ÂÁö È®ÀÎ
+        // check_addible_of_Queen
+        int ax, ay;
+        System.out.print("Input new queen's position (x,y): ");
+        temp = scanner.nextLine();
+
+        ax = Integer.parseInt(temp.split(" ")[0].trim()) - 1;
+        ay = Integer.parseInt(temp.split(" ")[1].trim()) - 1;
+
+        // »ç¿ëÀÚ ÁÂÇ¥ À¯È¿¼º È®ÀÎ
+        // check_valid_of_pos
+        if (!check_valid_of_pos(ax, ay)) {
+            System.out.println("ERROR: It is not a valid position!");
+            return;
+        }
+        // ÁÂÇ¥¿¡ QueenÀ» µÑ¼ö ÀÖ´ÂÁö È®ÀÎ
+        // check_addible_of_Queen
+        change_map(dx, dy, false);
+        if (!check_addible_of_Queen(ax, ay)) {
+            System.out.println("ERROR: It is not a valid position!");
+            change_map(dx, dy, true);
+            return;
+        }
+        // QueenÀ» ÀÌµ¿ÇÒ ¼ö ÀÖ´Ù¸é,
+        // ÀÌµ¿ÇÏ°í ÀÌµ¿ È½¼ö(numM) 1È¸ Áõ°¡
+        change_map(ax, ay, true);
+        count_numM();
     }
 
     // Get Char from user
@@ -116,8 +255,10 @@ public class Main {
 
         while (true) {
             System.out.print(menu);
+            Scanner scanner = new Scanner(System.in);
 
-            input = get_user_input();
+            input = scanner.nextLine();
+            input = input.trim();
 
             result = input.charAt(0);
 
@@ -128,26 +269,42 @@ public class Main {
                 case 'd':
                 case 'M':
                 case 'm':
-                    return result;
+                    break;
                 default:
                     System.out.println(error);
+                    continue;
             }
+            break;
         }
+        return result;
     }
 
     // print map
     public static void print_map() {
-        for (int pos : map) {
+        System.out.println("(numM:" + numM + " | numQ:" + get_number_of_Queen() + ")");
+        System.out.print("  ");
+        for (int i = 1; i <= msize; i++) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+        for (int y = 0; y < msize; y++) {
+            int pos = map[y];
+            System.out.print((y + 1) + " ");
             if (pos <= -1)
-                for (int i = 0; i < msize; i++)
-                    System.out.print(". ");
+                for (int x = 0; x < msize; x++) {
+                    if (!check_addible_of_Queen(x, y)) {
+                        System.out.print("x ");
+                    } else {
+                        System.out.print(". ");
+                    }
+                }
             else {
                 int i = 0;
-                for (; i < pos - 1; i++)
-                    System.out.print(". ");
+                for (; i < pos; i++)
+                    System.out.print("x ");
                 System.out.print("Q ");
-                for (; i < msize; i++)
-                    System.out.print(". ");
+                for (i = i + 1; i < msize; i++)
+                    System.out.print("x ");
             }
             System.out.println();
 
